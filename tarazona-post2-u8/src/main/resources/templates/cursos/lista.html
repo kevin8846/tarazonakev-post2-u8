@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lista de Cursos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f5f5f5; }
+        h1 { color: #c0392b; }
+        .container { background: white; padding: 25px; border-radius: 8px;
+                     box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; color: #c0392b; text-decoration: none; font-weight: bold; }
+        .btn { padding: 7px 14px; border-radius: 4px; text-decoration: none;
+               font-size: 13px; cursor: pointer; border: none; display: inline-block; }
+        .btn-primary  { background: #c0392b; color: white; }
+        .btn-info     { background: #2980b9; color: white; }
+        .btn-warning  { background: #e67e22; color: white; }
+        .btn-danger   { background: #7f0000; color: white; }
+        .btn:hover    { opacity: 0.85; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #c0392b; color: white; padding: 10px; text-align: left; }
+        td { padding: 9px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        tr:hover td { background: #fdf2f2; }
+        .badge { background: #c0392b; color: white; border-radius: 10px;
+                 padding: 2px 8px; font-size: 12px; }
+        .tag-estudiante { display: inline-block; background: #eaf0f6; color: #2c3e50;
+                          border-radius: 4px; padding: 2px 7px; font-size: 12px;
+                          margin: 2px; }
+        .alerta-exito { background: #d4edda; color: #155724; padding: 12px;
+                        border-radius: 4px; margin-bottom: 15px; }
+        .no-registros { color: #888; text-align: center; padding: 20px; }
+        .encabezado { display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="nav">
+        <a th:href="@{/estudiantes}">&#127891; Estudiantes</a>
+        <a th:href="@{/cursos}">&#128218; Cursos</a>
+    </div>
+
+    <div class="encabezado">
+        <h1>&#128218; Lista de Cursos</h1>
+        <a th:href="@{/cursos/nuevo}" class="btn btn-primary">+ Nuevo Curso</a>
+    </div>
+
+    <div th:if="${exito}" class="alerta-exito" th:text="${exito}"></div>
+
+    <table th:if="${#lists.size(cursos) > 0}">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre del Curso</th>
+            <th>Créditos</th>
+            <th>Estudiantes inscritos</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c, i : ${cursos}">
+            <td th:text="${i.count}"></td>
+            <td th:text="${c.nombre}"></td>
+            <td style="text-align:center">
+                <span class="badge" th:text="${c.creditos}"></span>
+            </td>
+            <td>
+                <!-- Muestra etiquetas con nombre de cada estudiante inscrito -->
+                <span th:each="e : ${c.estudiantes}"
+                      class="tag-estudiante"
+                      th:text="${e.nombre + ' ' + e.apellido}">
+                </span>
+                <em th:if="${#sets.size(c.estudiantes) == 0}" style="color:#aaa">Sin inscritos</em>
+                <br/>
+                <small style="color:#888" th:text="'Total: ' + ${#sets.size(c.estudiantes)} + ' estudiante(s)'"></small>
+            </td>
+            <td>
+                <a th:href="@{/cursos/{id}/inscribir(id=${c.id})}" class="btn btn-info">&#128100; Inscribir</a>
+                &nbsp;
+                <a th:href="@{/cursos/editar/{id}(id=${c.id})}" class="btn btn-warning">Editar</a>
+                &nbsp;
+                <a th:href="@{/cursos/eliminar/{id}(id=${c.id})}" class="btn btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.size(cursos) == 0}" class="no-registros">
+        No hay cursos registrados aún. ¡Crea el primero!
+    </p>
+
+</div>
+</body>
+</html>

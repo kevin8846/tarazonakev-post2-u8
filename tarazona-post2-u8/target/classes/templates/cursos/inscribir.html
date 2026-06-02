@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gestionar Inscripciones</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f5f5f5; }
+        h1, h2 { color: #c0392b; }
+        .container { background: white; padding: 25px; border-radius: 8px;
+                     box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 750px; }
+        .info-curso { background: #fdf2f2; border-left: 4px solid #c0392b;
+                      padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; }
+        .seccion { margin-top: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #c0392b; color: white; padding: 9px 10px; text-align: left; }
+        td { padding: 8px 10px; border-bottom: 1px solid #ddd; }
+        tr:hover td { background: #fdf2f2; }
+        .btn { padding: 6px 13px; border-radius: 4px; cursor: pointer;
+               font-size: 13px; border: none; text-decoration: none; display: inline-block; }
+        .btn-success  { background: #27ae60; color: white; }
+        .btn-danger   { background: #7f0000; color: white; }
+        .btn-secondary { background: #aaa; color: white; }
+        .btn:hover { opacity: 0.85; }
+        .alerta-exito { background: #d4edda; color: #155724; padding: 10px;
+                        border-radius: 4px; margin-bottom: 12px; }
+        .alerta-error { background: #f8d7da; color: #721c24; padding: 10px;
+                        border-radius: 4px; margin-bottom: 12px; }
+        .ya-inscrito { color: #888; font-style: italic; font-size: 13px; }
+        .sin-datos { color: #aaa; text-align: center; padding: 15px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Mensajes flash -->
+    <div th:if="${exito}" class="alerta-exito" th:text="${exito}"></div>
+    <div th:if="${error}"  class="alerta-error"  th:text="${error}"></div>
+
+    <h1>&#128100; Gestionar Inscripciones</h1>
+
+    <!-- Info del curso -->
+    <div class="info-curso">
+        <strong>Curso:</strong> <span th:text="${curso.nombre}"></span> &nbsp;|&nbsp;
+        <strong>Créditos:</strong> <span th:text="${curso.creditos}"></span> &nbsp;|&nbsp;
+        <strong>Inscritos:</strong> <span th:text="${#sets.size(curso.estudiantes)}"></span>
+    </div>
+
+    <!-- Sección 1: Estudiantes ya inscritos -->
+    <div class="seccion">
+        <h2>Estudiantes inscritos en este curso</h2>
+        <table th:if="${#sets.size(curso.estudiantes) > 0}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Carrera</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${curso.estudiantes}">
+                <td th:text="${e.nombre}"></td>
+                <td th:text="${e.apellido}"></td>
+                <td th:text="${e.correo}"></td>
+                <td th:text="${e.carrera}"></td>
+                <td>
+                    <!-- Botón para desinscribir -->
+                    <form th:action="@{/cursos/{cid}/desinscribir/{eid}(cid=${curso.id},eid=${e.id})}"
+                          method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('¿Desinscribir a este estudiante?')">
+                            &#10006; Desinscribir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#sets.size(curso.estudiantes) == 0}" class="sin-datos">
+            Ningún estudiante inscrito aún.
+        </p>
+    </div>
+
+    <!-- Sección 2: Inscribir nuevos estudiantes -->
+    <div class="seccion">
+        <h2>Inscribir un estudiante</h2>
+        <table th:if="${#lists.size(estudiantes) > 0}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Carrera</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${estudiantes}">
+                <td th:text="${e.nombre}"></td>
+                <td th:text="${e.apellido}"></td>
+                <td th:text="${e.carrera}"></td>
+                <td>
+                    <!-- Verificar si ya está inscrito -->
+                    <span th:if="${curso.estudiantes.contains(e)}" class="ya-inscrito">
+                        ✔ Ya inscrito
+                    </span>
+                    <span th:unless="${curso.estudiantes.contains(e)}" style="color:#27ae60">
+                        Disponible
+                    </span>
+                </td>
+                <td>
+                    <!-- Solo mostrar botón si NO está inscrito -->
+                    <form th:unless="${curso.estudiantes.contains(e)}"
+                          th:action="@{/cursos/{cid}/inscribir/{eid}(cid=${curso.id},eid=${e.id})}"
+                          method="post" style="display:inline">
+                        <button type="submit" class="btn btn-success">&#10003; Inscribir</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+    <a th:href="@{/cursos}" class="btn btn-secondary">&#8592; Volver a cursos</a>
+
+</div>
+</body>
+</html>

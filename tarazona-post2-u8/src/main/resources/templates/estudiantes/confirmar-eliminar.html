@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Confirmar Eliminación</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #f5f5f5; }
+        h1 { color: #c0392b; }
+        .container { background: white; padding: 30px; border-radius: 8px;
+                     box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 480px; }
+        .advertencia { background: #fff3cd; border-left: 4px solid #e67e22;
+                       padding: 14px; border-radius: 4px; margin: 20px 0; }
+        .datos-estudiante { background: #fdf2f2; padding: 15px;
+                            border-radius: 4px; margin-bottom: 20px; }
+        .datos-estudiante p { margin: 6px 0; font-size: 15px; }
+        .datos-estudiante span { font-weight: bold; color: #333; }
+        .btn { padding: 9px 18px; border-radius: 4px; cursor: pointer;
+               font-size: 14px; border: none; text-decoration: none; display: inline-block; }
+        .btn-danger   { background: #7f0000; color: white; }
+        .btn-secondary { background: #aaa; color: white; margin-left: 10px; }
+        .btn:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>&#9888; Confirmar Eliminación</h1>
+
+    <div class="advertencia">
+        ¿Estás seguro de que deseas eliminar al siguiente estudiante?
+        <strong>Esta acción no se puede deshacer.</strong>
+    </div>
+
+    <!-- Datos del estudiante a eliminar -->
+    <div class="datos-estudiante">
+        <p><span>Nombre:</span>  <span th:text="${estudiante.nombre + ' ' + estudiante.apellido}"></span></p>
+        <p><span>Correo:</span>  <span th:text="${estudiante.correo}"></span></p>
+        <p><span>Carrera:</span> <span th:text="${estudiante.carrera}"></span></p>
+    </div>
+
+    <!-- Formulario POST para confirmar eliminación -->
+    <form th:action="@{/estudiantes/eliminar/{id}(id=${estudiante.id})}" method="post">
+        <button type="submit" class="btn btn-danger">&#128465; Sí, eliminar</button>
+        <a th:href="@{/estudiantes}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+</div>
+</body>
+</html>
