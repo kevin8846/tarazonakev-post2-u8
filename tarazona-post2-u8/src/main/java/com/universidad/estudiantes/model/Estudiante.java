@@ -5,13 +5,7 @@ import jakarta.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Entidad JPA Estudiante.
- * Lado INVERSO de la relación @ManyToMany con Curso.
- *
- * @author Andres Felipe Jimenez Ramirez
- * Programación Web - Unidad 8 - Post-Contenido 2
- */
+
 @Entity
 @Table(name = "estudiantes")
 public class Estudiante {
