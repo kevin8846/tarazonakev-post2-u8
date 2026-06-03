@@ -5,14 +5,6 @@ import jakarta.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Entidad JPA Curso.
- * Lado PROPIETARIO de la relación @ManyToMany con Estudiante.
- * Define la tabla de unión "curso_estudiante" mediante @JoinTable.
- *
- * @author Andres Felipe Jimenez Ramirez
- * Programación Web - Unidad 8 - Post-Contenido 2
- */
 @Entity
 @Table(name = "cursos")
 public class Curso {
