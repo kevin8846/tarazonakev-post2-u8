@@ -8,15 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repositorio de acceso a datos para la entidad Curso.
- * Usa JOIN FETCH para resolver el problema N+1 al cargar estudiantes inscritos.
- *
- * Sin JOIN FETCH: 1 query para cursos + N queries para estudiantes de cada curso.
- * Con JOIN FETCH: 1 sola query con JOIN que trae todo junto.
- *
- * @author Andres Felipe Jimenez Ramirez
- */
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
